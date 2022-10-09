@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    
+    <title>用朴素贝叶斯辨别文言与白话 | 《日想錄》</title>
+
+    <meta name="description" content="&lt;p&gt;自机器学习真正出世，落于实践，已有数年。恰智能科学蓬勃发展之秋，我有幸忝入大数据之专业。近来机器学习开课，授业者不迂腐、同行者有共鸣、学而无倦，实乃幸事。&lt;/p&gt;">
+    <meta name="keywords" content="blog,Nranphy,Nranp,年回">
+
+    
+
+    <meta property="og:locale" content="zh-CN" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content= "用朴素贝叶斯辨别文言与白话 | 《日想錄》"  />
+    <meta property="og:description" content= "&lt;p&gt;自机器学习真正出世，落于实践，已有数年。恰智能科学蓬勃发展之秋，我有幸忝入大数据之专业。近来机器学习开课，授业者不迂腐、同行者有共鸣、学而无倦，实乃幸事。&lt;/p&gt;" />
+    <meta property="og:url" content="https://blog.nranp.com/tech/BayesWenyan/index.html" />
+    <meta property="og:site_name" content="" />
+    <meta property="article:author" content="Nranphy" />
+    <meta property="article:publisher" content="" />
+    <meta property="og:description" content="&lt;p&gt;自机器学习真正出世，落于实践，已有数年。恰智能科学蓬勃发展之秋，我有幸忝入大数据之专业。近来机器学习开课，授业者不迂腐、同行者有共鸣、学而无倦，实乃幸事。&lt;/p&gt;" />
+    <meta name="twitter:title" content="用朴素贝叶斯辨别文言与白话 | 《日想錄》"/>
+    <meta name="twitter:description" content="&lt;p&gt;自机器学习真正出世，落于实践，已有数年。恰智能科学蓬勃发展之秋，我有幸忝入大数据之专业。近来机器学习开课，授业者不迂腐、同行者有共鸣、学而无倦，实乃幸事。&lt;/p&gt;"/>
+    <script type="application/ld+json">
+        {
+            "description": "&lt;p&gt;自机器学习真正出世，落于实践，已有数年。恰智能科学蓬勃发展之秋，我有幸忝入大数据之专业。近来机器学习开课，授业者不迂腐、同行者有共鸣、学而无倦，实乃幸事。&lt;/p&gt;",
+            "author": { "@type": "Person", "name": "Nranphy" },
+            "@type": "BlogPosting",
+            "url": "https://blog.nranp.com/tech/BayesWenyan/index.html",
+            "publisher": {
+            "@type": "Organization",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://blog.nranp.comundefined"
+            },
+            "name": "Nranphy"
+            },
+            "headline": "用朴素贝叶斯辨别文言与白话 | 《日想錄》",
+            "datePublished": "2022-10-08T09:50:00.000Z",
+            "mainEntityOfPage": {
+                "@type": "WebPage",
+                "@id": "https://blog.nranp.com/tech/BayesWenyan/index.html"
+            },
+            "@context": "http://schema.org"
+        }
+    </script>
+
+
+
+
+    
+
+    
+    <meta property="algolia:search" data-application-id="1LD14LQ213" data-api-key="793e461384f239b83f7a54f925cf9b9a" data-index-name="blog">
+    
+
+    
+
+    
+    <link rel="icon" href="/images/favicon.ico">
+    
+
+    
+
+    
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+    
+
+    
+
+    
+<link rel="stylesheet" href="/dist/build.css?v=1654266144177.css">
+
+
+    
+<link rel="stylesheet" href="/dist/custom.css?v=1654266144177.css">
+
+
+    <script>
+        window.isPost = true
+        window.aomori = {
+            
+            gitalk: {
+                enable: true,
+                clientID: "2bdce2825bf5f4f4d40e",
+                clientSecret: "cfd23a7c7b405d24143351003003e98275bf87ee",
+                repo: "nranphy.github.io",
+                owner: "Nranphy",
+                admin: ["Nranphy",],
+                distractionFreeMode: true  // Facebook-like distraction free mode
+            },
+            
+            
+            
+        }
+        window.aomori_logo_typed_animated = true
+        window.aomori_search_algolia = true
+
+    </script>
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+
+    <div class="container">
+    <header class="header">
+        <div class="header-type">
+            
+            <div class="header-type-inner">
+                
+                    <div id="typed-strings" style="display:none">
+                        <p>《日想錄》</p>
+                    </div>
+                    <a class="header-type-title" id="typed" href="/"></a>
+                
+    
+                
+            </div>
+        </div>
+        <div class="header-menu">
+            <div class="header-menu-inner">
+                
+                <a href="/">ホーム</a>
+                
+                <a href="/artworks/">ARTWORKS</a>
+                
+                <a href="/categories/works/">WORKS</a>
+                
+                <a href="/categories/essay/">ESSAY</a>
+                
+                <a href="/categories/tech/">TECH</a>
+                
+                <a href="/categories/junk/">JUNK</a>
+                
+                <a href="/friends/">FRIENDS</a>
+                
+                <a href="/about/">ABOUT</a>
+                
+            </div>
+            <div class="header-menu-social">
+                
+    <a class="social" target="_blank" href="https://blog.nranp.com">
+        <ion-icon name="home-sharp"></ion-icon>
+    </a>
+
+    <a class="social" target="_blank" href="https://space.bilibili.com/10521539">
+        <ion-icon name="logo-youtube"></ion-icon>
+    </a>
+
+    <a class="social" target="_blank" href="https://github.com/Nranphy">
+        <ion-icon name="logo-github"></ion-icon>
+    </a>
+
+            </div>
+        </div>
+
+        <div class="header-menu-mobile">
+            <div class="header-menu-mobile-inner" id="mobile-menu-open">
+                <i class="icon icon-menu"></i>
+            </div>
+        </div>
+    </header>
+
+    <div class="header-menu-mobile-menu">
+        <div class="header-menu-mobile-menu-bg"></div>
+        <div class="header-menu-mobile-menu-wrap">
+            <div class="header-menu-mobile-menu-inner">
+                <div class="header-menu-mobile-menu-close" id="mobile-menu-close">
+                    <i class="icon icon-cross"></i>
+                </div>
+                <div class="header-menu-mobile-menu-list">
+                    
+                    <a href="/">ホーム</a>
+                    
+                    <a href="/artworks/">ARTWORKS</a>
+                    
+                    <a href="/categories/works/">WORKS</a>
+                    
+                    <a href="/categories/essay/">ESSAY</a>
+                    
+                    <a href="/categories/tech/">TECH</a>
+                    
+                    <a href="/categories/junk/">JUNK</a>
+                    
+                    <a href="/friends/">FRIENDS</a>
+                    
+                    <a href="/about/">ABOUT</a>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+    <div class="container">
+        <div class="main">
+            <section class="inner">
+                <section class="inner-main">
+                    <div class="post">
+    <article id="post-cl90rg4580001d0uaaqycb5lf" class="article article-type-post" itemscope
+    itemprop="blogPost">
+
+    <div class="article-inner">
+
+        
+          
+        
+        
+        
+
+        
+        <header class="article-header">
+            
+  
+    <h1 class="article-title" itemprop="name">
+      用朴素贝叶斯辨别文言与白话
+    </h1>
+  
+
+        </header>
+        
+
+        <div class="article-more-info article-more-info-post hairline">
+
+            <div class="article-date">
+  <time datetime="2022-10-08T09:50:00.000Z" itemprop="datePublished">2022-10-08</time>
+</div>
+
+            
+            <div class="article-category">
+                <a class="article-category-link" href="/categories/tech/">tech</a>
+            </div>
+            
+
+            
+            <div class="article-tag">
+                <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Bayes/" rel="tag">Bayes</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MachineLearning/" rel="tag">MachineLearning</a></li></ul>
+            </div>
+            
+
+            
+
+        </div>
+
+        <div class="article-entry post-inner-html hairline" itemprop="articleBody">
+            <p>自机器学习真正出世，落于实践，已有数年。恰智能科学蓬勃发展之秋，我有幸忝入大数据之专业。近来机器学习开课，授业者不迂腐、同行者有共鸣、学而无倦，实乃幸事。</p>
+<span id="more"></span>
+<p>学习之途，必然会有实践练习与种种思考。我想在此尽力将各类基础模型及其小实践项目记录详实，一来以免遗忘，二来可为偶逢本文之后来者留下些许参考。在下能力有限、造诣浅薄，或并不足出此般豪迈之语，但若有他人从中获益，便是极好之事。</p>
+<hr>
+<p>标题或许已经足够概述内容。最近正拜读周志华教授的《机器学习》西瓜书，其序言与正文的字里行间常常表现出先生的文采和深邃思想。或许因此我才想以文言分辨为题，完成贝叶斯分类器的小项目。</p>
+<p>本文将从理论和编程的角度分别讲述该实验小项目。至于正态贝叶斯等其他贝叶斯分类器模型，不在本文讨论范围之内。</p>
+<h2 id="贝叶斯公式"><a href="#贝叶斯公式" class="headerlink" title="贝叶斯公式"></a>贝叶斯公式</h2><p>了解过条件概型的人，大概都知道这样一个简单公式：$P(a|b)=\frac{P(a,b)}{P(b)}$.<br>用最浅显的语言解释，便是 <strong>“在 $b$ 的条件下发生 $a$ 的事件的概率 $P(a|b)$，等于两事件同时发生的概率 $P(a,b)$ 除以 $b$ 事件发生的概率 $P(b)$”</strong> 。</p>
+<p>这很简单，却也总是会令人遐想——我们是否可以通过这样的一个公式，得到 $P(a|b)$ 与 $P(b|a)$ 之联系，从而达到用现象探寻本质的效果呢？</p>
+<p>贝叶斯(Thomas Bayes)或许也这样想过，人们明知好人比坏人更容易做好事，对于偶遇的一个在做好事的人，我们大可推测，此人便是所谓的好人。贝叶斯给出了这样的公式，后来人称其为<strong>贝叶斯法则</strong>：</p>
+<script type="math/tex; mode=display">P(y|x)=\frac{P(x|y)P(y)}{P(x)}</script><p>其中，$P(y)$被称为 $y$ 的<strong>先验概率</strong>；而 $P(y|x)$ 由于先有 $x$ 的参与，被称为 $y$ 的<strong>后验概率</strong>。若把 $x$ 当成做好事的行为，而 $y$ 是“这个人是好人”的结论，我想应该很容易感受到两种概率之间的区别。</p>
+<p>我一向认为，单凭一件事情就判定其对象的本质，是一种不够负责且目光短浅的行为。好人应该不单“会做好事”，也会“少做坏事”，更会“避免慷他人之慨”；如果将好人的多个特征都考虑进这个模型中，想必精确度会更高一些。</p>
+<p>将上述公式中的 $x$ 用表示多个<strong>特征</strong>的向量 $\boldsymbol{x}$ 替换，便得到了我们的常用公式：</p>
+<script type="math/tex; mode=display">P(y|\boldsymbol{x})=\frac{P(\boldsymbol{x}|y)P(y)}{P(\boldsymbol{x})}</script><p>特征是我们为对象人为选取的几个方面（如对于“西瓜颜色”这一方面，特征值可以是“浅绿色”、“深绿色”、“黄色”等等，只要模型考虑到了该方面的因素）。该式子与上述公式并没有多少不同，仅仅是纳入考虑范围的因素多了一些。</p>
+<p>至此，贝叶斯分类器的数学原理也应该大致明晰了，原理并不复杂，正如同真理大多简短。我想用自己的想法做总结——贝叶斯公式，也就是利用多个样本统计出的经验，试图以概率的角度从对象的特征判断其本质。</p>
+<h2 id="贝叶斯公式细节：不同的贝叶斯分类器"><a href="#贝叶斯公式细节：不同的贝叶斯分类器" class="headerlink" title="贝叶斯公式细节：不同的贝叶斯分类器"></a>贝叶斯公式细节：不同的贝叶斯分类器</h2><p>我们再仔细观察上述公式中每一项（为方便后续讲述，我将 $y$ 用代表任一类别的 $c$ 替换）：</p>
+<script type="math/tex; mode=display">P(c|\boldsymbol{x})=\frac{P(\boldsymbol{x}|c)P(c)}{P(\boldsymbol{x})}</script><p>其中 $P(\boldsymbol{x})$ 对于不同的 $c$ 总是相同的，鉴于我们的任务是将 $\boldsymbol{x}$ 分类，需要对不同的类别的概率 $P(c|\boldsymbol{x})$ 进行比较，故可以直接忽视，等到比较时略去即可。</p>
+<p>$P(c)$ 是所谓<strong>类概率</strong>，课本言：“$P(c)$ 为 $c$ 类别的样本在训练集中出现的概率，即 $P(c) = \frac{N_c}{N}$.”，但我认为并不够妥当。多数情况，我们并不能通过样本比例来判断实际情况中的类别比例，也就是说，我们选取的样本并不一定与事实和应用场景中的类别比例相同。我认为，这个值可以作为<strong>超参数</strong>由使用者人为提供，以达到最好的效果。</p>
+<p>然后是最为复杂的 $P(\boldsymbol{x}|c)$ ，$\boldsymbol{x}$ 包含了我们选取的要判断的对象所拥有的特征，其分量个数可称为<strong>维数</strong>；如何将其化简成我们能够简单计算的式子，便是多数贝叶斯分类器的不同之处——如果我们认定其中特征有所联系，因此在展开时考虑入协方差，如果我们人为认定每一特征最多与 $k$ 个特征有联系，便成了<strong>半朴素贝叶斯分类器</strong>；如果我们认定特征都是连续的，并且都满足正态分布，并用均值和方差展开，便成了<strong>正态贝叶斯分类器</strong>。最最特殊且平常的一种想法，我们认定每种特征都独立，不依附其他特征存在，直接用条件独立公式展开，便成了<strong>朴素贝叶斯分类器</strong>。</p>
+<p>下面我将通过项目中的例子来具体阐述。</p>
+<h2 id="朴素贝叶斯，并加之自然语言"><a href="#朴素贝叶斯，并加之自然语言" class="headerlink" title="朴素贝叶斯，并加之自然语言"></a>朴素贝叶斯，并加之自然语言</h2><h3 id="公式化简"><a href="#公式化简" class="headerlink" title="公式化简"></a>公式化简</h3><p>我所做的练习项目是分辨自然语言的文言与白话，分析的对象便是自然语言的句子，特征可以选取“某些词语出现的频率”，而本项目中，我选择的是 <strong>“分词是否出现”</strong>。</p>
+<p>对于例句“我永远喜欢有马加奈”，人们一般分词为’我’,’永远’,’喜欢’,’有马加奈’。而放入公式中，则是：</p>
+<script type="math/tex; mode=display">P(c|“我”,“永远”,“喜欢”,“有马加奈”)=\frac{P(“我”,“永远”,“喜欢”,“有马加奈”|c)P(c)}{P(“我”,“永远”,“喜欢”,“有马加奈”)}</script><p>我们选用朴素贝叶斯分类器，假设各条件独立，根据条件独立公式展开可以得到：</p>
+<script type="math/tex; mode=display">P(c|“我”,“永远”,“喜欢”,“有马加奈”)=\frac{(P(“我”|c) \times P(“永远”|c) \times P(“喜欢”|c) \times P(“有马加奈”|c)) \times P(c)}{P(“我”,“永远”,“喜欢”,“有马加奈”)}</script><p>其中 $P(“词语”|c)$ 是在我们训练的模型中，出现过“词语”一词的<strong>句子频率</strong>（这是因为我选择的特征是“分词是否出现”，切记自己选择的特征的含义）。用“我”字举例，则是：$P(“我”|c)=\frac{N_c(“我”)}{N_c}$ 。比起之前的公式，上式显然更好求值。</p>
+<p>和西瓜书的练习题不同，自然语言有更多的可能性，想要提高识别精度自然需要更多的训练样本，单单是我做的小模型，文言与白话分别都使用了 $100000$ 个句子进行训练（选择同样多的训练集也有其用意，详见下文；训练集请参见本文末），因此，每一个分词所得到的概率，都是一个极小的小数，若要相乘起来，更是要求极高的小数精度最终还要比较两种类别的概率浮点数大小，很明显不是一个明智的做法。</p>
+<p>我对公式再次进行变形：</p>
+<script type="math/tex; mode=display">P(c|“我”,“永远”,“喜欢”,“有马加奈”)=\frac{(N_c(“我”) \times N_c(“永远”) \times N_c(“喜欢”) \times N_c(“有马加奈”)) \times P(c)}{P(“我”,“永远”,“喜欢”,“有马加奈”) \times N_c^4}</script><p>则对于任一类别 $c$ ，我们只需要比较上式中不同的部分即可。也就是说，我们仅需要比较每个类别用下式得到的计算值：</p>
+<script type="math/tex; mode=display">\frac{N_c(“我”) \times N_c(“永远”) \times N_c(“喜欢”) \times N_c(“有马加奈”) \times P(c)}{N_c^4}</script><p>当每个类别的训练样本相同多的时候，$N_c$ 也将相同，如我的模型中则为 $100000$ ；而前文提到，我认为 $P(c)$ 可以人为取值，这里我为<code>文言</code>和<code>白话</code>两个类别都取为0.5（但就算根据样本之比的定义来取值，这里也应该是0.5）。进一步化简，可得结果类别为：</p>
+<script type="math/tex; mode=display">\underset{c}{\arg\max} N_c(“我”) \times N_c(“永远”) \times N_c(“喜欢”) \times N_c(“有马加奈”)</script><p>其中 $\underset{c}{\arg\max}$ 表示整个式子的结果为令后面式子值最大的 $c$ 的值。整个式子已经变成了十分简单的形式，对于部分语言的实现，我们仅需考虑大数的溢出问题，相比小数的溢出已是十分简单。</p>
+<h3 id="拉普拉斯平滑"><a href="#拉普拉斯平滑" class="headerlink" title="拉普拉斯平滑"></a>拉普拉斯平滑</h3><p>中文分词基本不可能穷举，显然，样本并不可能涵盖所有词语，句子中各个分词的频数并不一定不为0.在例句中，“有马加奈”一词便不一定存在于模型中，如果任由其为0，则式子计算值为0.</p>
+<p>在机器学习中有一种名为<strong>拉普拉斯平滑</strong>的数据处理方式，我们为每个特征的频数都加 $1$，样本总数都加$k$（$k$ 为该特征的可能情况数，如本例只有“有”和“没有”两种状态，则$k=2$），这样各种情况的概率和仍然为 $1$。对于上述例句，则有 $P(“我”|c)=\frac{N_c(“我”)+1}{N_c+2}$ ，便可避免计算值归零的错误。</p>
+<p>接下来便是用程序实现这个分类算法了。</p>
+<h2 id="程序实现"><a href="#程序实现" class="headerlink" title="程序实现"></a>程序实现</h2><p>我们需要先准备数据集。这期间，我本想用小爬虫从古诗文网自动爬取古诗文，但可惜其数据并未分句，还带有作者、标题等内容，而后我找来长篇的古文经书电子档，却也有许多难以去除的广告内容和不规范的格式。分句尚可用句号来分割，但不干净的数据却会影响程序的训练效果。最终，我在 Github 找到了一个<a target="_blank" rel="noopener" href="https://github.com/NiuTrans/Classical-Modern">古文对应翻译的数据集仓库</a>。</p>
+<p>中文分词我使用了 Python 的 jiaba 库，这是最方便的做法。</p>
+<p>接下来是贴代码时间，完整程序加上模型和测试结果可在<a target="_blank" rel="noopener" href="https://github.com/Nranphy/bayes_wenyan">我的这个仓库</a>中看到，以下代码可以直接略过。</p>
+<p>然后我写了简单的训练程序：</p>
+<pre><code class="lang-Python"># train.py
+&#39;&#39;&#39;利用训练集进行训练&#39;&#39;&#39;
+
+from pathlib import Path
+from collections import Counter
+from dataclasses import dataclass, field
+from utils import check_file # 这是小工具，检查文件是否存在
+import jieba
+import json
+
+from config import * # 这里是我提供可设置项的文件
+
+
+@dataclass
+class Category:
+    name:str
+    cnt:int = 0
+    data:dict[str, int] = field(default_factory=Counter)
+
+    def new_sentence(self, words:set[str]):
+        &#39;&#39;&#39;增加新句子的特征&#39;&#39;&#39;
+        self.cnt += 1
+        self.data += Counter(words)
+
+    def to_dic(self) -&gt; dict:
+        &#39;&#39;&#39;转化为字典&#39;&#39;&#39;
+        return &#123;
+            &quot;count&quot;: self.cnt,
+            &quot;data&quot;: self.data
+        &#125;
+
+    def save_model(self, file_path:Path):
+        &#39;&#39;&#39;将Category模型保存为json文件&#39;&#39;&#39;
+        check_file(file_path)
+        with open(file_path, &quot;w&quot;, encoding=&quot;UTF-8-sig&quot;) as f:
+            json.dump(self.to_dic(), f)
+        print(f&quot;类别 &#123;self.name&#125; 的统计模型已保存。&quot;)
+
+
+def statistic(path:Path, name:str = &#39;&#39;, result:Category=None, max_count = 0):
+    &#39;&#39;&#39;对目标训练文本目录进行递归统计，并保存结果&#39;&#39;&#39;
+    if not result:
+        result = Category(name)
+    for sub in path.iterdir():
+        if sub.is_file():
+            with open(sub, &quot;r&quot;, encoding=&quot;UTF-8-sig&quot;) as f:
+                while (sentence := f.readline()) and (max_count and result.cnt &lt; max_count):
+                    words = set(jieba.cut(sentence, cut_all=True))
+                    result.new_sentence(words)
+        else:
+            statistic(path, result=result, max_count=max_count)
+    save_path = model_path / f&quot;&#123;name&#125;.category&quot;
+    result.save_model(save_path)    
+
+
+if __name__ == &#39;__main__&#39;:
+    for category in categories_info:
+        statistic(category[&quot;path&quot;], category[&quot;name&quot;], max_count=max_count)
+    print(&quot;所有标签已训练完成~&quot;)
+</code></pre>
+<p>得到了模型，文言的模型大概长这样：<br><img src="/images/BayesWenyan/wenyan_model.png" alt="文言统计模型"></p>
+<p>然后是利用模型进行分类的程序（其中使用了<strong>拉普拉斯平滑</strong>）：</p>
+<pre><code class="lang-Python"># bayes.py
+&#39;&#39;&#39;利用朴素贝叶斯进行文言白话的判断&#39;&#39;&#39;
+
+import json
+import jieba
+
+
+from config import *
+from utils import mul
+
+
+def get_words_count(words:set[str], category_name:str) -&gt; tuple[int]:
+    &#39;&#39;&#39;获得各个分词在所指类别模型中的频数&#39;&#39;&#39;
+    category_path = model_path / (category_name+&quot;.category&quot;)
+    if not category_path.is_file():
+        raise Exception(f&quot;找不到目标路径 &#123;category_path&#125;&quot;)
+    with open(category_path, &quot;r&quot;, encoding=&quot;UTF-8-sig&quot;) as f:
+        category_data:dict = json.load(f)
+    return ((category_data[&quot;data&quot;].get(word, 0)+1)  for word in words if word not in punctuation) #进行了拉普拉斯平滑
+
+
+
+def bayes(sentence:str, logger=True) -&gt; int:
+    &#39;&#39;&#39;
+    利用贝叶斯分类器进行分类
+    :rtype: 返回分类结果，-1为白话，0为无法区分，1为文言
+    &#39;&#39;&#39;
+    words = set(jieba.cut(sentence, cut_all=True))
+    categories_res = []
+
+    for category in categories_info:
+        cnt = get_words_count(words, category[&quot;name&quot;])
+        res = mul(cnt)
+        if logger: print(f&quot;类别【&#123;category[&#39;name_cn&#39;]&#125;】公式计算值得 &#123;res&#125;&quot;)
+        categories_res.append((res, category[&quot;name&quot;], category[&quot;name_cn&quot;]))
+
+    if logger: print(&quot;=========&quot;)
+
+    if (1/res_retio) &lt; (categories_res[1][0] / categories_res[0][0]) &lt; res_retio:
+        if logger: print(&quot;该句子无法分辨出文言或白话&quot;)
+        return 0
+    else:
+        final_res = max(categories_res)
+        if logger: print(f&quot;该句子分类为【&#123;final_res[2]&#125;】&quot;)
+        for category in categories_info:
+            if category[&quot;name&quot;] == final_res[1]:
+                if category[&quot;rflag&quot;]:
+                    return category[&quot;rflag&quot;]
+                else:
+                    raise Exception(f&quot;类别 &#123;category[&#39;name&#39;]&#125; 的返回值不能设置为 0.&quot;)
+
+
+if __name__ == &#39;__main__&#39;:
+    sentence = &quot; 晋太元中，武陵人捕鱼为业。缘溪行，忘路之远近。忽逢桃花林，夹岸数百步，中无杂树，芳草鲜美，落英缤纷。渔人甚异之，复前行，欲穷其林。 &quot;
+    bayes(sentence)
+</code></pre>
+<p>由于已知只有两个类别，我们可以直接比较两类别的计算值得出结论，同时我还设置了一个结果为“无法区分”的区间，可以避免很多语句的误分类。</p>
+<p>这时候可以利用程序简单看看效果了<br><img src="/images/BayesWenyan/simple_test_lx.png" alt="鲁迅文笔"><br><img src="/images/BayesWenyan/simple_test_o1.png" alt="原~"><br><img src="/images/BayesWenyan/simple_test_o2.png" alt="这也是原~"></p>
+<p>如果要更科学的看到效果，我们还要准备测试集，自己分句也可，从未使用的训练集截取也行（由于是简单程序，并没有用交叉验证等等方法）。然后是测试程序：</p>
+<pre><code class="lang-Python">&#39;&#39;&#39;利用测试集进行判定&#39;&#39;&#39;
+
+from config import *
+from bayes import bayes
+from pathlib import Path
+
+def single_test(category_name:str, flag:int, logger=True):
+    &#39;&#39;&#39;
+    对目标测试集进行分类测试
+    :param flag: 正确的分类器返回值
+    :param logger: 是否在控制台输出分类失败和分类错误的句子
+    &#39;&#39;&#39;
+    test_file = test_path / f&quot;&#123;category_name&#125;.test&quot;
+    if not test_file.is_file():
+        raise Exception(f&quot;找不到目标文件 &#123;test_file&#125;&quot;)
+    total_cnt, correct_cnt, unkown_cnt = 0,0,0
+    false_sentence, unkown_sentence = [],[]
+    with open(test_file, &quot;r&quot;, encoding=&quot;UTF-8-sig&quot;) as f:
+        while sentence := f.readline():
+            result = bayes(sentence, False)
+            total_cnt += 1
+            if not result:
+                unkown_sentence.append(&quot;【分类失败】&quot;+sentence)
+                unkown_cnt += 1
+            elif result == flag:
+                correct_cnt += 1
+            else:
+                false_sentence.append(&quot;【分类错误】&quot;+sentence)
+
+    false_sentence = &#39;\n&#39;.join(false_sentence)
+    unkown_sentence = &#39;\n&#39;.join(unkown_sentence)
+    if logger:
+        print(false_sentence)
+        print(unkown_sentence)
+    result = (
+        &quot;=========\n&quot;
+        f&quot;类别【&#123;category_name&#125;】测试结果：\n&quot;
+        f&quot;测试总数：&#123;total_cnt&#125;\n&quot;
+        f&quot;正确数：&#123;correct_cnt&#125;\n&quot;
+        f&quot;分类失败数：&#123;unkown_cnt&#125;\n&quot;
+        f&quot;正确率:&#123;correct_cnt/(total_cnt-unkown_cnt):.2%&#125; （已去除分类失败数）\n&quot;
+        f&quot;错误率:&#123;(total_cnt-unkown_cnt-correct_cnt)/(total_cnt-unkown_cnt):.2%&#125; （已去除分类失败数）\n&quot;
+        &quot;=========\n&quot;
+        f&quot;分类器 res_retio 值为 &#123;res_retio&#125;\n&quot;
+        &quot;=========\n&quot;
+        )
+    print(result)
+    with open(test_path / f&quot;&#123;category_name&#125;.result&quot;, &quot;w&quot;, encoding=&quot;UTF-8-sig&quot;) as f:
+        f.write(result)
+        f.write(false_sentence)
+        f.write(unkown_sentence)
+
+def global_test(logger=True):
+    &#39;&#39;&#39;对config中所提所有类别进行分类测试&#39;&#39;&#39;
+    for category in categories_info:
+        single_test(category[&quot;name&quot;], category[&quot;rflag&quot;], logger=logger)
+
+
+if __name__ == &quot;__main__&quot;:
+    global_test(False)
+</code></pre>
+<p>测试效果：<br><img src="/images/BayesWenyan/test_baihua.png" alt="白话测试"><br>白话识别效果较好，识别错误的基本都为鲁迅先生写的文言。<br><img src="/images/BayesWenyan/test_wenyan.png" alt="文言测试"><br>文言或许是因为词语更多，训练 $100000$ 句也不甚足够，但正确率也足够高了。</p>
+<p>程序大概就如此，具体细节请参考<a target="_blank" rel="noopener" href="https://github.com/Nranphy/bayes_wenyan">我的这个仓库</a>。</p>
+<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><ul>
+<li>对于上述例句，jieba 分词全分词可得到[‘我’,’永远’,’喜欢’,’有’,’马’,’加’,’奈’]。对于专有名词被误分解的情况，如果是在特殊应用场景，我认为要在训练集中就考虑到该情况，而一般情况下只有尽力避免对此类例句进行分析，或者人为用非中文字符代替。</li>
+<li>对于标点符号，我并没有在训练时进行清除，而是在测试时忽略它们，毕竟对众多样本句子都进行清洗显然效率更低。</li>
+<li>不在忽略名单中的生僻字、乱码等，可以预见其在白话和文言中的频数均为 $0$ ，在平滑处理后他们都会变成对结果不会有影响的 $1$，不妨不加考虑。</li>
+<li>同学者在测试本项目时，大多提到“如果给予一串无意义的句子，如‘啊说从嗄有分或吧’，却仍然会分辨白话文言”，我想回应的是，这个练手项目的目的仅仅是分辨文言和白话，而非分辨语句有无意义，这并不是一个关键问题。</li>
+</ul>
+<p>本文内容仅仅是机器学习入门知识，或不够全面，也或有纰漏之处，望来者不吝指教；作文不足之处还望海涵。</p>
+<!-- [NiuTrans/Classical-Modern: 非常全的文言文（古文）-现代文平行语料](https://github.com/NiuTrans/Classical-Modern) -->
+        </div>
+
+    </div>
+
+    
+
+    
+
+    
+  <div class="article-refer hairline">
+    <h3> 文章参考文献 </h3>
+    
+    <p>
+      <a target="_blank" rel="nofollow" href="https://github.com/NiuTrans/Classical-Modern">NiuTrans/Classical-Modern: 非常全的文言文（古文）-现代文平行语料</a>
+    </p>
+    
+  </div>
+  
+
+    
+
+    
+
+    
+<nav class="article-nav">
+  
+  
+    <a href="/tech/PythonDataclassesProblems/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-caption">上一篇</div>
+      <div class="article-nav-title">Python dataclasses 数据类相关问题</div>
+    </a>
+  
+</nav>
+
+
+    <section class="share">
+        <div class="share-title">分享</div>
+        <a class="share-item" target="_blank"
+            href="https://twitter.com/share?text=用朴素贝叶斯辨别文言与白话 - 《日想錄》&url=https%3A%2F%2Fblog.nranp.com%2Ftech%2FBayesWenyan%2F">
+            <ion-icon name="logo-twitter"></ion-icon>
+        </a>
+        <a class="share-item" target="_blank"
+            href="https://www.facebook.com/sharer.php?title=用朴素贝叶斯辨别文言与白话 - 《日想錄》&u=https%3A%2F%2Fblog.nranp.com%2Ftech%2FBayesWenyan%2F">
+            <ion-icon name="logo-facebook"></ion-icon>
+        </a>
+        <!-- <a class="share-item" target="_blank"
+            href="https://service.weibo.com/share/share.php?title=用朴素贝叶斯辨别文言与白话 - 《日想錄》&url=https://blog.nranp.com/tech/BayesWenyan/&pic=">
+            <div class="n-icon n-icon-weibo"></div>
+        </a> -->
+    </section>
+
+</article>
+
+
+
+
+
+
+
+
+<section class="comments">
+    <div id="gitalk-container"></div>
+</section>
+
+
+
+
+
+
+
+
+
+</div>
+                </section>
+            </section>
+
+            
+            <aside class="sidebar sidebar-search-fix">
+                
+
+    <div class="search">
+    <div class="has-icon-right">
+        <input type="text" class="form-input" id="search" placeholder="SEARCH" autocomplete="off">
+        <div class="form-icon">
+            <ion-icon name="search"></ion-icon>
+        </div>
+    </div>
+    <div class="search-result" id="search-ps"></div>
+</div>
+
+
+<div class="widget" id="widget">
+    
+      
+  <div class="widget-wrap">
+    <div class="widget-inner">
+      <div class="toc post-toc-html"></div>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget-wrap widget-cate">
+    <div class="widget-title"><span>Categories</span></div>
+    <div class="widget-inner">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/essay/">essay</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/junk/">junk</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/tech/">tech</a></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget-wrap widget-tags">
+    <div class="widget-title"><span>Tags</span></div>
+    <div class="widget-inner">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bayes/" rel="tag">Bayes</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MachineLearning/" rel="tag">MachineLearning</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/" rel="tag">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dataclasses/" rel="tag">dataclasses</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%89%8B%E8%AE%B0/" rel="tag">手记</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%96%87%E7%AB%A0/" rel="tag">文章</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%A9%BA%E5%8D%8E/" rel="tag">空华</a></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget-wrap widget-recent-posts">
+    <div class="widget-title"><span>Recent Posts</span></div>
+    <div class="widget-inner">
+      <ul>
+        
+          <li>
+            <a href="/tech/BayesWenyan/">用朴素贝叶斯辨别文言与白话</a>
+          </li>
+        
+          <li>
+            <a href="/tech/PythonDataclassesProblems/">Python dataclasses 数据类相关问题</a>
+          </li>
+        
+          <li>
+            <a href="/essay/mirage/">《空华》| 序言手记</a>
+          </li>
+        
+          <li>
+            <a href="/junk/first_hello/">初见御礼</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget-wrap widget-archive">
+    <div class="widget-title"><span>Archive</span></div>
+    <div class="widget-inner">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/">2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/">2021</a></li></ul>
+    </div>
+  </div>
+
+
+    
+</div>
+
+<div id="backtop"><i class="icon icon-arrow-up"></i></div>
+            </aside>
+            
+        </div>
+    </div>
+
+    <footer class="footer">
+    <div class="footer-wave">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#3c4859" fill-opacity="1" d="M0,160L60,181.3C120,203,240,245,360,240C480,235,600,181,720,186.7C840,192,960,256,1080,261.3C1200,267,1320,213,1380,186.7L1440,160L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path></svg>
+    </div>
+
+    <!-- Please do not remove this -->
+    <!-- 开源不易，请勿删除 -->
+    <div class="footer-wrap">
+        <div class="footer-inner"> 
+            <b>《日想錄》 &copy; 2017-2022</b><br>
+            <b>Powered By <a href="https://hexo.io/" target="_blank">Hexo</a> · Theme By <a href="https://linhong.me/" target="_blank">Aomori</a></b><br>
+            <b>ひとりの惑星。</b>
+        </div>
+    </div>
+
+</footer>
+
+<script type="module" src="https://unpkg.com/ionicons@6.0.2/dist/ionicons/ionicons.esm.js"></script>
+
+
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+
+
+
+
+<script src="/dist/build.js?1654266144177.js"></script>
+
+
+<script src="/dist/custom.js?1654266144177.js"></script>
+
+
+
+<!-- 百度链接提交 -->
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-AMS-MML_SVG"></script>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":true,"model":{"scale":1,"hHeadPos":0.5,"vHeadPos":0.618,"jsonPath":"/live2dw/assets/shizuku.model.json"},"display":{"superSample":2,"width":200,"height":400,"position":"right","hOffset":40,"vOffset":-20},"mobile":{"show":false,"scale":0.5},"react":{"opacityDefault":0.7,"opacityOnHover":0.2},"log":false});</script></body>
+
+</html>
