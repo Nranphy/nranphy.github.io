@@ -112,7 +112,8 @@ img:not([src]):not([srcset]) {
 
 .header .header-type-title {
     color: var(--color-type);
-    font-family: Oswald, sans-serif
+    font-family: PMingLiU, MingLiU, Oswald, sans-serif;
+    font-size: 40px;
 }
 
 .header .header-type-page-title {
