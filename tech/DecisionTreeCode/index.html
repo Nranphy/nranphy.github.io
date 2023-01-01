@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    
+    <title>决策树算法简单实现 | 《日想錄》</title>
+
+    <meta name="description" content="&lt;p&gt;机器学习有数个最经典的算法模型，而决策树在这些算法中也能称作最经典之一。从符号主义盛行的上世纪八十年代，直到算法思想和算力都有所进步的今天，决策树因为其简单的逻辑和较好的效果，仍被众多学习者使用。&lt;/p&gt;">
+    <meta name="keywords" content="blog,Nranphy,Nranp,年回">
+
+    
+
+    <meta property="og:locale" content="zh-CN" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content= "决策树算法简单实现 | 《日想錄》"  />
+    <meta property="og:description" content= "&lt;p&gt;机器学习有数个最经典的算法模型，而决策树在这些算法中也能称作最经典之一。从符号主义盛行的上世纪八十年代，直到算法思想和算力都有所进步的今天，决策树因为其简单的逻辑和较好的效果，仍被众多学习者使用。&lt;/p&gt;" />
+    <meta property="og:url" content="https://blog.nranp.com/tech/DecisionTreeCode/index.html" />
+    <meta property="og:site_name" content="" />
+    <meta property="article:author" content="Nranphy" />
+    <meta property="article:publisher" content="" />
+    <meta property="og:description" content="&lt;p&gt;机器学习有数个最经典的算法模型，而决策树在这些算法中也能称作最经典之一。从符号主义盛行的上世纪八十年代，直到算法思想和算力都有所进步的今天，决策树因为其简单的逻辑和较好的效果，仍被众多学习者使用。&lt;/p&gt;" />
+    <meta name="twitter:title" content="决策树算法简单实现 | 《日想錄》"/>
+    <meta name="twitter:description" content="&lt;p&gt;机器学习有数个最经典的算法模型，而决策树在这些算法中也能称作最经典之一。从符号主义盛行的上世纪八十年代，直到算法思想和算力都有所进步的今天，决策树因为其简单的逻辑和较好的效果，仍被众多学习者使用。&lt;/p&gt;"/>
+    <script type="application/ld+json">
+        {
+            "description": "&lt;p&gt;机器学习有数个最经典的算法模型，而决策树在这些算法中也能称作最经典之一。从符号主义盛行的上世纪八十年代，直到算法思想和算力都有所进步的今天，决策树因为其简单的逻辑和较好的效果，仍被众多学习者使用。&lt;/p&gt;",
+            "author": { "@type": "Person", "name": "Nranphy" },
+            "@type": "BlogPosting",
+            "url": "https://blog.nranp.com/tech/DecisionTreeCode/index.html",
+            "publisher": {
+            "@type": "Organization",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://blog.nranp.comundefined"
+            },
+            "name": "Nranphy"
+            },
+            "headline": "决策树算法简单实现 | 《日想錄》",
+            "datePublished": "2022-11-07T12:27:00.000Z",
+            "mainEntityOfPage": {
+                "@type": "WebPage",
+                "@id": "https://blog.nranp.com/tech/DecisionTreeCode/index.html"
+            },
+            "@context": "http://schema.org"
+        }
+    </script>
+
+
+
+
+    
+
+    
+    <meta property="algolia:search" data-application-id="1LD14LQ213" data-api-key="793e461384f239b83f7a54f925cf9b9a" data-index-name="blog">
+    
+
+    
+
+    
+    <link rel="icon" href="/images/favicon.ico">
+    
+
+    
+
+    
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+    
+
+    
+
+    
+<link rel="stylesheet" href="/dist/build.css?v=1654266144177.css">
+
+
+    
+<link rel="stylesheet" href="/dist/custom.css?v=1654266144177.css">
+
+
+    <script>
+        window.isPost = true
+        window.aomori = {
+            
+            gitalk: {
+                enable: true,
+                clientID: "2bdce2825bf5f4f4d40e",
+                clientSecret: "cfd23a7c7b405d24143351003003e98275bf87ee",
+                repo: "nranphy.github.io",
+                owner: "Nranphy",
+                admin: ["Nranphy",],
+                distractionFreeMode: true  // Facebook-like distraction free mode
+            },
+            
+            
+            
+        }
+        window.aomori_logo_typed_animated = true
+        window.aomori_search_algolia = true
+
+    </script>
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+
+    <div class="container">
+    <header class="header">
+        <div class="header-type">
+            
+            <div class="header-type-inner">
+                
+                    <div id="typed-strings" style="display:none">
+                        <p>《日想錄》</p>
+                    </div>
+                    <a class="header-type-title" id="typed" href="/"></a>
+                
+    
+                
+            </div>
+        </div>
+        <div class="header-menu">
+            <div class="header-menu-inner">
+                
+                <a href="/">ホーム</a>
+                
+                <a href="/artworks/">ARTWORKS</a>
+                
+                <a href="/categories/works/">WORKS</a>
+                
+                <a href="/categories/essay/">ESSAY</a>
+                
+                <a href="/categories/tech/">TECH</a>
+                
+                <a href="/categories/junk/">JUNK</a>
+                
+                <a href="/friends/">FRIENDS</a>
+                
+                <a href="/about/">ABOUT</a>
+                
+            </div>
+            <div class="header-menu-social">
+                
+    <a class="social" target="_blank" href="https://blog.nranp.com">
+        <ion-icon name="home-sharp"></ion-icon>
+    </a>
+
+    <a class="social" target="_blank" href="https://space.bilibili.com/10521539">
+        <ion-icon name="logo-youtube"></ion-icon>
+    </a>
+
+    <a class="social" target="_blank" href="https://github.com/Nranphy">
+        <ion-icon name="logo-github"></ion-icon>
+    </a>
+
+            </div>
+        </div>
+
+        <div class="header-menu-mobile">
+            <div class="header-menu-mobile-inner" id="mobile-menu-open">
+                <i class="icon icon-menu"></i>
+            </div>
+        </div>
+    </header>
+
+    <div class="header-menu-mobile-menu">
+        <div class="header-menu-mobile-menu-bg"></div>
+        <div class="header-menu-mobile-menu-wrap">
+            <div class="header-menu-mobile-menu-inner">
+                <div class="header-menu-mobile-menu-close" id="mobile-menu-close">
+                    <i class="icon icon-cross"></i>
+                </div>
+                <div class="header-menu-mobile-menu-list">
+                    
+                    <a href="/">ホーム</a>
+                    
+                    <a href="/artworks/">ARTWORKS</a>
+                    
+                    <a href="/categories/works/">WORKS</a>
+                    
+                    <a href="/categories/essay/">ESSAY</a>
+                    
+                    <a href="/categories/tech/">TECH</a>
+                    
+                    <a href="/categories/junk/">JUNK</a>
+                    
+                    <a href="/friends/">FRIENDS</a>
+                    
+                    <a href="/about/">ABOUT</a>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+    <div class="container">
+        <div class="main">
+            <section class="inner">
+                <section class="inner-main">
+                    <div class="post">
+    <article id="post-cla6rx7t30003b8uabnc5asj0" class="article article-type-post" itemscope
+    itemprop="blogPost">
+
+    <div class="article-inner">
+
+        
+          
+        
+        
+        
+
+        
+        <header class="article-header">
+            
+  
+    <h1 class="article-title" itemprop="name">
+      决策树算法简单实现
+    </h1>
+  
+
+        </header>
+        
+
+        <div class="article-more-info article-more-info-post hairline">
+
+            <div class="article-date">
+  <time datetime="2022-11-07T12:27:00.000Z" itemprop="datePublished">2022-11-07</time>
+</div>
+
+            
+            <div class="article-category">
+                <a class="article-category-link" href="/categories/tech/">tech</a>
+            </div>
+            
+
+            
+            <div class="article-tag">
+                <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/DecisionTreeCode/" rel="tag">DecisionTreeCode</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MachineLearning/" rel="tag">MachineLearning</a></li></ul>
+            </div>
+            
+
+            
+
+        </div>
+
+        <div class="article-entry post-inner-html hairline" itemprop="articleBody">
+            <p>机器学习有数个最经典的算法模型，而决策树在这些算法中也能称作最经典之一。从符号主义盛行的上世纪八十年代，直到算法思想和算力都有所进步的今天，决策树因为其简单的逻辑和较好的效果，仍被众多学习者使用。</p>
+<span id="more"></span>
+<p>本文仅阐述练习项目中所用的决策树算法，参考了各类决策树算法（ID3, C4.5, CART)的部分内容，而各类决策树算法的详细类容和多算法结合的相关问题本文并不会太多涉及。实际上，上文所提到决策树算法并无本质差别，触类旁通并非难事。</p>
+<h2 id="决策树介绍"><a href="#决策树介绍" class="headerlink" title="决策树介绍"></a>决策树介绍</h2><p>即使是不接触机器学习，决策树一词也并不少见。人在选择中，总是会做出一系列判断来辅助决策。</p>
+<p><img src="/images/DecisionTreeCode/motree.png" alt="摸鱼树示例=v="></p>
+<p>类似这种凭不同判断依据，将情况指向不同的决策的算法，被称为决策树。而所谓决策既可以为分类，也可为回归，可见决策树的适用面之广。</p>
+<h2 id="决策树基本训练算法"><a href="#决策树基本训练算法" class="headerlink" title="决策树基本训练算法"></a>决策树基本训练算法</h2><p>我所看过的每本参考资料中，所提到的决策树训练算法都大同小异，无非是用数据集对树中的每个节点选取某样特征、将数据集进行分裂，直至达到停止分裂的条件，便设定最后的节点为叶节点；当从根部分裂出的若干分支都停止在了叶节点时，我们就得到了所需的决策树。而使用该决策树进行判断时，我们仅需要依照每个非叶节点的指引，逐步靠近包含结果的叶节点即可。</p>
+<p>下面是西瓜书中的决策树算法伪码，个人认为足够清晰明了。</p>
+<p><img src="/images/DecisionTreeCode/BasicAlgorithmFromBook.png" alt="西瓜书决策树算法伪码"></p>
+<p>训练算法本身是一种深度优先的递归过程，首先是简单的<strong>终止条件</strong>（同属一个分类、无剩余可用判断属性、可用判断属性全相同），然后是<strong>寻找最佳分割点</strong>（第8行是整个算法的核心，将会在后文详细解说），最后是<strong>对于不同的分类情况选择继续递归创建新节点或是使其称为叶节点</strong>。</p>
+<p>而在另一本资料中，提出了算法实现中几大需要解决的重要问题：</p>
+<ol>
+<li>特征向量有多个分量，每个决策节点上应该选择哪个分量做判断？</li>
+<li>选定一个特征后，判定的规则是什么？</li>
+<li>何时停止分裂，将该节点设置为叶节点？</li>
+<li>以什么为依据为叶节点赋值？</li>
+</ol>
+<p>本文并非教材，也不会像教材那样细致的讲解思考过程。下面给出我所理解的一份答卷：</p>
+<ol>
+<li>对每个特征都进行尝试性的分割，用<strong>某种指标</strong>判断划分优劣，并选择最优秀的划分方式。</li>
+<li>我的项目中只考虑了<strong>离散</strong>和<strong>连续</strong>两类特征，将在下文分别提到划分方法。</li>
+<li>正如伪码所示，当某个节点的训练集都为同一分类时、当某个节点可用以分类的特征为空时、当某个节点划分的收益过低时，我们都会结束分裂。运用决策树剪枝方法后，可能还会有其他判断依据。</li>
+<li>多数情况下，分类问题都是选取叶节点的样本中数量最多的那个分类作为节点的值，而对于回归问题，可以选择用样本的均值等统计量作为叶节点的值。</li>
+</ol>
+<h2 id="决策树划分选择"><a href="#决策树划分选择" class="headerlink" title="决策树划分选择"></a>决策树划分选择</h2><p>前文提到，寻找最佳分裂点是算法的核心，而本文所考虑的特征仅有简单的离散和连续特征。</p>
+<h3 id="离散特征"><a href="#离散特征" class="headerlink" title="离散特征"></a>离散特征</h3><p>对于离散的特征（如颜色为<code>红</code>、<code>黄</code>、<code>蓝</code>、<code>绿</code>），不难想到直接对标签值进行分类得到数个子节点（对于例子可分为4个子节点，对其所传入的训练集分别是颜色特征为<code>红</code>、<code>黄</code>、<code>蓝</code>、<code>绿</code>的样本）。</p>
+<p>可以见得，当某个节点以离散特征作为划分依据时，传入每个子节点的训练集的该特征均相同（传入第一个子节点的样本该特征都为<code>红</code>，传入第二个都为<code>黄</code>，以此类推），故子节点及后代节点都不再需要对该特征进行判断。也就是说，<strong>当节点以离散特征作为划分依据时，其后代节点不可以再凭该特征进行划分</strong>。</p>
+<h3 id="连续特征"><a href="#连续特征" class="headerlink" title="连续特征"></a>连续特征</h3><p>连续特征并不能像离散特征一样直接以数据来进行分类，据我所知，不同的决策树经典算法也对其有不同的处理方式。</p>
+<p>ID3 决策树选择的处理方法是<strong>将连续数据分为数个区间，再如同离散数据一般进行分类</strong>，也就是<strong>将连续数据离散化</strong>。这样的好处是程序会变得更加简洁，只需要考虑离散数据的分类，训练算法的复杂度也会大大降低；但就同将连续值转为离散区间一般，连续数据所含信息有所丢失，这样的分类并不一定能够达到最佳的分类效果。</p>
+<p>和离散特征一样，这样的处理方式也决定了该特征不能<strong>也不能被后代节点作为划分依据</strong>。</p>
+<p>第二种方法，也就是本小项目中采用的处理方法，是 C4.5 算法所用的<strong>二分法</strong>，即<strong>将连续数据划为为两个类别</strong>。我们将连续数据进行排序，并穷举所有的二分划分方法，即每两个相邻连续数据之间位置，判断每个位置的划分优劣，选择最优位置进行划分，此时判断值为该位置前后元素的平均值。</p>
+<p>文字描述或许不尽简洁易懂，下面举个简单的例子。对于已排序的n个连续特征 $\{a^1,a^2,…,a^n\}$ ，我们可以得到 $n-1$ 个划分位置选择，即集合 $\{\frac{a^i+a^{i+1}}{2}|1\leq i\leq n-1\}$ ，我们再分别进行优劣判断。这种方法能比上一种方法保留更多信息，也更可能找到所有特征中最佳的划分方式，但它的复杂度更高，运算量会成倍增加，不过在我看来，一般情况下这种复杂对于计算机并不算太过分。</p>
+<p>与离散数据不同的是，我们采取的二分方法并不一定能一次性得到该特征最好的划分效果，但它的优势在于，子代也可以在没有更优的划分选择时，选择再次凭连续特征进行分化，即<strong>使用二分类进行划分的连续特征仍可作为后代节点的划分依据</strong>。</p>
+<h3 id="划分优劣判断指标"><a href="#划分优劣判断指标" class="headerlink" title="划分优劣判断指标"></a>划分优劣判断指标</h3><p>在具体记录各种判断依据之前，不得不对前文两种特征类型稍微总结：一个含有 $n$ 种类别的离散特征划分需要判断的次数是 $1$ 次，而一个含有 $n$ 个数据的连续特征用二分法划分需要判断的次数是 $n-1$ 次。这是因为一个离散变量仅有 $1$ 种划分选择，而连续变量有 $n-1$ 种划分选择，这也是前文表示用二分法处理连续特征更复杂的原因。</p>
+<p>下面将介绍几种划分选择可用的指标，各种定义并不随资料不同而有大的改变，我会摘抄西瓜书上部分的定义内容，再加上自己的理解和引导。</p>
+<p>既然要判断划分的优劣，我们对于每个数据集也要有一种优劣判断指标，当样本纯度越高时，我们也希望这个指标会越高。我们一般选用<strong>信息熵(熵不纯度)</strong>这一指标来度量样本的纯度：<br>样本集合 $D$ 中的第 $k$ 类样本所占比例为 $p_k (k = 1,2,…,\lvert\mathcal{Y}\rvert)$ ，其信息熵为</p>
+<script type="math/tex; mode=display">Ent(D) = -\sum_{k=1}^{\lvert\mathcal{Y}\rvert}p_k\log_2p_k</script><p>当 $Ent(D)$ 越小时， $D$ 的纯度越高。</p>
+<p>不难想到，对于划分前后的数据集，对其信息熵进行运算，可以得到一种划分优劣判断指标，较常用的是<strong>信息增益</strong>。<br>将样本集合 $D$ 依照特征 $a$ 划分为 $D^1,D^2,…,D^v$ 数个新样本集，每个样本集权重依照样本数定义为 $\frac{\lvert D^i \rvert}{\lvert D \rvert} (i=1,2,…,v)$ ，则特征 $a$ 对样本集合 $D$ 进行划分的信息增益为</p>
+<script type="math/tex; mode=display">Gain(D, a) = Ent(D) - \sum_{i=1}^{v}\frac{\lvert D^i \rvert}{\lvert D \rvert}Ent(D^i)</script><p>一般而言， $Gain(D, a)$ 越大，说明依照特征 $a$ 对 $D$ 进行划分得到的纯度提升越高。上文多次提到的 ID3 决策树算法就是以此指标作为判断依据。</p>
+<p>西瓜书提到，依照信息增益进行划分，“会使可取值数目较多的属性有所偏好”，有时给模型训练会带来不良影响。</p>
+<p>此时可以引出一种新的指标，即<strong>信息增益率</strong>。<br>同上文信息增益的条件下，依照特征 $a$ 对 $D$ 进行划分的信息增益率为</p>
+<script type="math/tex; mode=display">Gain\_ratio(D, a) = \frac{Gain(D, a)}{IV(a)}</script><p>其中</p>
+<script type="math/tex; mode=display">IV(a) = -\sum_{i=1}^{v}\frac{\lvert D^i \rvert}{\lvert D \rvert}\log_2\frac{\lvert D^i \rvert}{\lvert D \rvert}</script><p>被称为特征 $a$ 的“固有值”，当凭特征 $a$ 所能分割的样本集数量越多， $IV(a)$通常会越大，与信息增益 $Gain(D, a)$ 相除一定程度上可以消除信息增益的偏好所带来的不良影响。但这种修正是否会矫枉过正呢？西瓜书又提到，信息增益率又会“对可取值数目较少的属性有所偏好”。C4.5 算法并非直接使用了这项指标作为判断依据，而是先找出信息增益高于平均水平的特征，再从中选取信息增益率最高的。<br>本小项目中并未考虑得如此细致，一是因为所用的训练集大多是只有连续特征，所有划分都是二分类，基本不存在这种不公平，二是精力有限，对于练习项目仅仅做出典型算法即可，至于更多拓展的内容，与经典算法并无本质区别，何苦刻意求全。<br>（观察可知，特征 $a$ 的固有值 $IV(a)$ 的写法与信息熵写法十分相像，可以看出它的本质：特征 $a$ 的固有值 $IV(a)$ 也就是样本集 $D$ 在特征 $a$ 上的信息熵，公式中“ $\sum_{i=1}^{v}\frac{\lvert D^i \rvert}{\lvert D \rvert}$ ”部分正是求均值的方法。）</p>
+<p>除上文所提两种判断指标以外，还有其他的指标可以用在决策树，比如 CART 决策树算法所用的 <strong>Gini 指数（基尼指数）</strong>，它依靠类似信息熵的一种指标，叫<strong>Gini 值 （基尼值/基尼不纯度）</strong>。</p>
+<p>样本集合 $D$ 中的第 $k$ 类样本（即 $D_k$）所占比例为 $p_k (k = 1,2,…,\lvert\mathcal{Y}\rvert)$ ，该样本集的 Gini 值为</p>
+<script type="math/tex; mode=display">Gini(D) = \sum_{k=1}^{\lvert\mathcal{Y}\rvert}\sum_{k^{\prime} \neq k}p_kp_{k^{\prime}} = 1-\sum_{k=1}^{\lvert\mathcal{Y}\rvert}p_k^2 = 1-\frac{\sum_{i=1}^{k}{\lvert D_k \rvert}^2}{\lvert D \rvert}</script><p>它反映了从数据集 $D$ 中随机抽取两个样本，其类别标记不一致的概率。</p>
+<p>同前文对信息增益的定义，将样本集合 $D$ 依照特征 $a$ 划分为 $D^1,D^2,…,D^v$ 数个新样本集，则特征 $a$ 对样本集 $D$ 进行划分的 Gini 指数为</p>
+<script type="math/tex; mode=display">Gini\_index(D, a) = \sum_{i=1}^{v}\frac{\lvert D^i \rvert}{\lvert D \rvert}Gini(D^i)</script><p>则可以使得 Gini 指数<strong>最小</strong>的划分选择是该条件下最优划分选择。</p>
+<p>此外，还有一些常用的不纯度指标，这里再记录一种<strong>误分类不纯度</strong>。</p>
+<p>样本集合 $D$ 中的第 $k$ 类样本（即 $D_k$）所占比例为 $p_k (k = 1,2,…,\lvert\mathcal{Y}\rvert)$ ，该样本集的误分类不纯度为</p>
+<script type="math/tex; mode=display">E(D) = 1 - \max(p_i) (i=1,2,...,k)</script><h3 id="共同点？"><a href="#共同点？" class="headerlink" title="共同点？"></a>共同点？</h3><p>观察上文提到的信息增益和 Gini 指数，其实都是相同的套路——一是将划分前的样本集不纯度减去划分后的加权样本集不纯度得到的值，使该值最大时，样本划分的纯度提升最大，如信息增益；二是取分割后的样本集的加权不纯度，使该值最小时，样本划分的纯度提升最大，如 Gini 指数。</p>
+<p>就前者先加论述，使这个值为 $G(D, a)$ ，所对应的不纯度指标为 $E(D)$ （此次并非特指上文的误分类不纯度），将样本集合 $D$ 依照特征 $a$ 划分为 $D^1,D^2,…,D^v$ 数个新样本集，则特征 $a$ 对样本集 $D$ 进行划分的 $G(D, a)$ 为</p>
+<script type="math/tex; mode=display">G(D, a) = E(D) - \sum_{i=1}^{v}\frac{\lvert D^i \rvert}{\lvert D \rvert}E(D^i)</script><p>我们选取最优分割的特征 $a^*$ 则是使 $G(D, a)$ 最大的特征</p>
+<script type="math/tex; mode=display">a^* = \underset{a}{\arg\max} G(D,a)</script><p>而后者较简单，仅仅表示划分后的加权不纯度，使这个值为 $E^\prime(D, a)$ ，则有</p>
+<script type="math/tex; mode=display">E^\prime(D, a) = \sum_{i=1}^{v}\frac{\lvert D^i \rvert}{\lvert D \rvert}E(D^i)</script><p>最优划分的特征 $a^*$ 则是使 $E^\prime(D, a)$ 最小的特征</p>
+<script type="math/tex; mode=display">a^* = \underset{a}{\arg\min} E^\prime(D, a)</script><h2 id="决策树特殊处理"><a href="#决策树特殊处理" class="headerlink" title="决策树特殊处理"></a>决策树特殊处理</h2><p>在实际编写程序时，还有许多异常情况需要另行处理。由于前文已提到连续值特征的处理问题，故本节不再详细讨论。而对于回归树的相关问题，本小项目并未涉及，还请另行查阅资料。</p>
+<h3 id="缺失值处理"><a href="#缺失值处理" class="headerlink" title="缺失值处理"></a>缺失值处理</h3><h3 id="决策树剪枝"><a href="#决策树剪枝" class="headerlink" title="决策树剪枝"></a>决策树剪枝</h3><h2 id="程序实现"><a href="#程序实现" class="headerlink" title="程序实现"></a>程序实现</h2>
+        </div>
+
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+<nav class="article-nav">
+  
+  
+    <a href="/tech/BayesWenyan/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-caption">上一篇</div>
+      <div class="article-nav-title">用朴素贝叶斯辨别文言与白话</div>
+    </a>
+  
+</nav>
+
+
+    <section class="share">
+        <div class="share-title">分享</div>
+        <a class="share-item" target="_blank"
+            href="https://twitter.com/share?text=决策树算法简单实现 - 《日想錄》&url=https%3A%2F%2Fblog.nranp.com%2Ftech%2FDecisionTreeCode%2F">
+            <ion-icon name="logo-twitter"></ion-icon>
+        </a>
+        <a class="share-item" target="_blank"
+            href="https://www.facebook.com/sharer.php?title=决策树算法简单实现 - 《日想錄》&u=https%3A%2F%2Fblog.nranp.com%2Ftech%2FDecisionTreeCode%2F">
+            <ion-icon name="logo-facebook"></ion-icon>
+        </a>
+        <!-- <a class="share-item" target="_blank"
+            href="https://service.weibo.com/share/share.php?title=决策树算法简单实现 - 《日想錄》&url=https://blog.nranp.com/tech/DecisionTreeCode/&pic=">
+            <div class="n-icon n-icon-weibo"></div>
+        </a> -->
+    </section>
+
+</article>
+
+
+
+
+
+
+
+
+<section class="comments">
+    <div id="gitalk-container"></div>
+</section>
+
+
+
+
+
+
+
+
+
+</div>
+                </section>
+            </section>
+
+            
+            <aside class="sidebar sidebar-search-fix">
+                
+
+    <div class="search">
+    <div class="has-icon-right">
+        <input type="text" class="form-input" id="search" placeholder="SEARCH" autocomplete="off">
+        <div class="form-icon">
+            <ion-icon name="search"></ion-icon>
+        </div>
+    </div>
+    <div class="search-result" id="search-ps"></div>
+</div>
+
+
+<div class="widget" id="widget">
+    
+      
+  <div class="widget-wrap">
+    <div class="widget-inner">
+      <div class="toc post-toc-html"></div>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget-wrap widget-cate">
+    <div class="widget-title"><span>Categories</span></div>
+    <div class="widget-inner">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/essay/">essay</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/junk/">junk</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/tech/">tech</a></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget-wrap widget-tags">
+    <div class="widget-title"><span>Tags</span></div>
+    <div class="widget-inner">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bayes/" rel="tag">Bayes</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DecisionTreeCode/" rel="tag">DecisionTreeCode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MachineLearning/" rel="tag">MachineLearning</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/" rel="tag">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dataclasses/" rel="tag">dataclasses</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%89%8B%E8%AE%B0/" rel="tag">手记</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%96%87%E7%AB%A0/" rel="tag">文章</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%A9%BA%E5%8D%8E/" rel="tag">空华</a></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget-wrap widget-recent-posts">
+    <div class="widget-title"><span>Recent Posts</span></div>
+    <div class="widget-inner">
+      <ul>
+        
+          <li>
+            <a href="/tech/DecisionTreeCode/">决策树算法简单实现</a>
+          </li>
+        
+          <li>
+            <a href="/tech/BayesWenyan/">用朴素贝叶斯辨别文言与白话</a>
+          </li>
+        
+          <li>
+            <a href="/tech/PythonDataclassesProblems/">Python dataclasses 数据类相关问题</a>
+          </li>
+        
+          <li>
+            <a href="/essay/mirage/">《空华》| 序言手记</a>
+          </li>
+        
+          <li>
+            <a href="/junk/first_hello/">初见御礼</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget-wrap widget-archive">
+    <div class="widget-title"><span>Archive</span></div>
+    <div class="widget-inner">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/">2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/">2021</a></li></ul>
+    </div>
+  </div>
+
+
+    
+</div>
+
+<div id="backtop"><i class="icon icon-arrow-up"></i></div>
+            </aside>
+            
+        </div>
+    </div>
+
+    <footer class="footer">
+    <div class="footer-wave">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#3c4859" fill-opacity="1" d="M0,160L60,181.3C120,203,240,245,360,240C480,235,600,181,720,186.7C840,192,960,256,1080,261.3C1200,267,1320,213,1380,186.7L1440,160L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path></svg>
+    </div>
+
+    <!-- Please do not remove this -->
+    <!-- 开源不易，请勿删除 -->
+    <div class="footer-wrap">
+        <div class="footer-inner"> 
+            <b>《日想錄》 &copy; 2017-2023</b><br>
+            <b>Powered By <a href="https://hexo.io/" target="_blank">Hexo</a> · Theme By <a href="https://linhong.me/" target="_blank">Aomori</a></b><br>
+            <b>ひとりの惑星。</b>
+            <p><a href="https://icp.gov.moe/?keyword=20232320" target="_blank">萌ICP备20232320号</a></p>
+        </div>
+    </div>
+
+</footer>
+
+<script type="module" src="https://unpkg.com/ionicons@6.0.2/dist/ionicons/ionicons.esm.js"></script>
+
+
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+
+
+
+
+<script src="/dist/build.js?1654266144177.js"></script>
+
+
+<script src="/dist/custom.js?1654266144177.js"></script>
+
+
+
+<!-- 百度链接提交 -->
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-AMS-MML_SVG"></script>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":true,"model":{"scale":1,"hHeadPos":0.5,"vHeadPos":0.618,"jsonPath":"/live2dw/assets/shizuku.model.json"},"display":{"superSample":2,"width":200,"height":400,"position":"right","hOffset":40,"vOffset":-20},"mobile":{"show":false,"scale":0.5},"react":{"opacityDefault":0.7,"opacityOnHover":0.2},"log":false});</script></body>
+
+</html>
