@@ -1326,43 +1326,53 @@ img:not([src]):not([srcset]) {
     padding: 0 0 10px
 }
 
-.friends-category-inner div.friends-single {
+.friends-category-inner .friends-single {
     float: left;
     background: var(--color-white-light);
     border-radius: 8px;
-    display: block;
+    display: flex;
     padding: 10px;
     position: relative;
     width: 270px;
     height: auto;
     margin: 5px;
+    box-shadow: 2px 2px 4px 0 rgba(0, 0, 0, .15);
+    transition: all .4s;
 }
 
-div.friends-single img.friends-single-favicon {
+.friends-category-inner .friends-single:hover {
+    text-decoration: none;
+    box-shadow:0 10px 20px -10px rgba(0, 0, 0, .1);
+    transform: translateY(-3px) scale(1.01);
+}
+
+.friends-single img.friends-single-favicon {
     height: 80px;
     width: 80px;
     float: left;
     position: relative;
     margin: 5px 5px;
     border-radius: 10px;
+    box-shadow: 3px 2px 5px rgba(0, 0, 0, .05);
+    transition: all .4s;
   }
 
-div.friends-single div.friends-single-wordblock {
+.friends-single div.friends-single-wordblock {
     float: right;
     width: 158px;
 }
 
-div.friends-single a.friends-single-name {
+.friends-single .friends-single-wordblock .friends-single-name {
     font-size: 18px;
     float: left;
     margin: 10px;
     display: block;
 }
 
-div.friends-single p.friends-single-intro {
+.friends-single .friends-single-wordblock .friends-single-intro {
     display: block;
     float: left;
-    margin: 10px;
+    margin: 5px;
     color: #00000095;
   }
 
